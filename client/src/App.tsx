@@ -76,41 +76,50 @@ function App() {
   }
 
   return (
-    <div className="flex flex-col h-screen bg-gray-900 text-white">
-      <header className="flex items-center justify-between px-4 py-3 bg-gray-800">
-        <div className="flex items-center space-x-4">
-          <h1 className="text-xl font-bold">Collaborative Code Editor</h1>
+    <div className="flex flex-col h-screen bg-gray-900 text-white overflow-x-hidden">
+      {/* Header */}
+      <header className="flex flex-col sm:flex-row items-start sm:items-center justify-between px-4 py-3 bg-gray-800 space-y-2 sm:space-y-0">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
+          <h1 className="text-lg sm:text-xl font-bold">Collaborative Code Editor</h1>
           <LanguageSelector />
           <ExecuteButton onClick={handleExecuteCode} isLoading={isExecuting} />
         </div>
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-2">
           <button
             onClick={handleShare}
-            className="flex items-center space-x-2 px-4 py-2 bg-blue-600 rounded-md hover:bg-blue-700"
+            className="flex items-center space-x-2 px-3 py-1 sm:px-4 sm:py-2 bg-blue-600 rounded-md hover:bg-blue-700 text-sm sm:text-base"
           >
             <Share2 className="w-4 h-4" />
             <span>Share</span>
           </button>
           <button
             onClick={handleDownload}
-            className="flex items-center space-x-2 px-4 py-2 bg-green-600 rounded-md hover:bg-green-700"
+            className="flex items-center space-x-2 px-3 py-1 sm:px-4 sm:py-2 bg-green-600 rounded-md hover:bg-green-700 text-sm sm:text-base"
           >
             <Download className="w-4 h-4" />
             <span>Download</span>
           </button>
         </div>
       </header>
+
+      {/* Room Info */}
       <RoomInfo />
-      <main className="flex-1 flex">
-        <div className="flex-1 flex flex-col">
-          <div className="flex-1">
+
+      {/* Main Content */}
+      <main className="flex-1 flex flex-col sm:flex-row overflow-hidden">
+        {/* Code Editor Section */}
+        <div className="flex-1 sm:flex-2 flex flex-col">
+          <div className="flex-1 overflow-auto h-1/3 sm:h-64"> {/* Adjust height for mobile */}
             <CodeEditor />
           </div>
-          <div className="h-64 p-4">
+          {/* Output Box */}
+          <div className="h-1/3 sm:h-64 md-h-20p-4 overflow-auto bg-gray-800"> {/* Same height as code editor */}
             <CodeOutput output={output} error={error} isLoading={isExecuting} />
           </div>
         </div>
-        <div className="w-80 border-l border-gray-700">
+
+        {/* Chat Box Section */}
+        <div className="w-full sm:w-80 border-t sm:border-t-0 sm:border-l border-gray-700 overflow-auto h-1/3 sm:h-auto flex-shrink-0"> {/* Same height as code editor/output */}
           <ChatBox />
         </div>
       </main>
