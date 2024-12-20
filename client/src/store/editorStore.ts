@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import defaultCode from '../defaultCode';
 
 interface EditorStore {
   code: string;
@@ -12,12 +13,16 @@ interface EditorStore {
 }
 
 export const useEditorStore = create<EditorStore>((set) => ({
-  code: '',
+  code: defaultCode.javascript, // Initialize with JavaScript default code
   language: 'javascript',
   roomId: null,
   users: [],
   setCode: (code) => set({ code }),
-  setLanguage: (language) => set({ language }),
+  setLanguage: (language) =>
+    set({
+      language,
+      code: defaultCode[language] || '// Default code not available for this language',
+    }),
   setRoomId: (roomId) => set({ roomId }),
   setUsers: (users) => set({ users }),
 }));

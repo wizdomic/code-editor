@@ -38,6 +38,7 @@ export function CodeEditor() {
 
   return (
     <Editor
+    className=''
       height="100%"
       defaultLanguage={language}
       language={language}

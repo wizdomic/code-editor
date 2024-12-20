@@ -6,7 +6,7 @@ export function LanguageSelector() {
   const { language, roomId, setLanguage } = useEditorStore();
 
   const handleLanguageChange = (newLanguage: string) => {
-    setLanguage(newLanguage);
+    setLanguage(newLanguage); // Updates code automatically
     if (roomId) {
       socket.emit('language-change', { roomId, language: newLanguage });
     }
@@ -16,7 +16,7 @@ export function LanguageSelector() {
     <select
       value={language}
       onChange={(e) => handleLanguageChange(e.target.value)}
-      className="bg-gray-800 text-white px-3 py-1 rounded-md"
+      className="bg-gray-900 text-white px-3 py-1 rounded-md"
     >
       {SUPPORTED_LANGUAGES.map((lang) => (
         <option key={lang.id} value={lang.id}>
