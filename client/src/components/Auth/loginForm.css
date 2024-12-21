@@ -1,0 +1,167 @@
+/* Create a starry background that slowly dims */
+body{
+  box-sizing: border-box;
+  overflow:hidden;
+}
+
+.starry-background {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  background: #000;
+}
+
+.starry-background::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('https://cdn.pixabay.com/photo/2016/12/06/02/56/astronomy-1872283_960_720.jpg') no-repeat center center/cover;
+  animation: dimStars 1s infinite alternate; /* Slow down dimming effect */
+}
+
+/* Dimming animation */
+@keyframes dimStars {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.3;
+  }
+}
+
+/* Fewer stars */
+.star {
+  position: absolute;
+  border-radius: 50%;
+  background-color: white;
+  opacity: 0.5;
+  animation: twinkle 6s infinite alternate, fall 40s infinite linear; /* Slower fall */
+}
+
+@keyframes twinkle {
+  0% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes fall {
+  0% {
+    transform: translateY(-100vh);
+  }
+  100% {
+    transform: translateY(100vh);
+  }
+}
+
+.starry-background .star:nth-child(odd) {
+  animation-duration: 6s; /* Slow down the odd stars */
+}
+
+.starry-background .star:nth-child(even) {
+  animation-duration: 8s; /* Slow down the even stars */
+}
+
+/* Adjusting width/height of the stars to make them less dense */
+.star {
+  width: 2px; /* Smaller size */
+  height: 2px; /* Smaller size */
+}
+
+/* Optional: Create a way to control the number of stars dynamically */
+.starry-background .star-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* Increase the form size and make it responsive */
+.form-container {
+  width: 90%;
+  max-width: 500px; /* Limit max width */
+  padding: 2rem; /* Adjust padding for spacious form */
+  box-sizing: border-box;
+  background-color: #2d2d2d;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+}
+
+h2 {
+  font-size: 1.75rem; /* Adjust heading font size */
+  margin-bottom: 1.5rem;
+}
+
+/* Larger input fields and buttons */
+input,
+button {
+  font-size: 1.125rem; /* Larger text size */
+  padding: 0.75rem 1.25rem;
+  margin: 0.5rem 0;
+  border-radius: 8px;
+}
+
+input {
+  width: 100%;
+  background-color: #3d3d3d;
+  border: 1px solid #444;
+  color: white;
+}
+
+button {
+  width: 100%;
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+/* For mobile responsiveness */
+@media (max-width: 768px) {
+  .form-container {
+    width: 90%;
+    max-width: 400px; /* Further reduce width for smaller screens */
+    padding: 1.5rem; /* Adjust padding for mobile */
+  }
+
+  h2 {
+    font-size: 1.5rem; /* Reduce font size on small screens */
+  }
+
+  input,
+  button {
+    font-size: 1rem; /* Adjust font size */
+    padding: 0.75rem; /* Adjust padding */
+  }
+}
+
+@media (max-width: 480px) {
+  .form-container {
+    width: 95%;
+    max-width: 100%;
+  }
+
+  h2 {
+    font-size: 1.25rem; /* Further reduce heading size */
+  }
+
+  input,
+  button {
+    font-size: 0.875rem; /* Reduce button/input text size */
+  }
+}
