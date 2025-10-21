@@ -14,6 +14,13 @@ class UserService {
   removeUser(socketId) {
     this.users.delete(socketId);
   }
+
+  isUserNameTaken(name) {
+    for (const user of this.users.values()) {
+      if (user.toLowerCase() === name.toLowerCase()) return true;
+    }
+    return false;
+  }
 }
 
 export default new UserService();
