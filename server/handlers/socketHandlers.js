@@ -5,12 +5,15 @@ export function setupSocketHandlers(io) {
   io.on("connection", (socket) => {
     console.log("User connected:", socket.id);
 
+    // --- Username setup ---
     socket.on("set-username", (username) => {
       const cleanName = username?.trim();
+
       if (!cleanName || cleanName.length < 3 || cleanName.length > 20) {
         socket.emit("error-message", "Username must be 3–20 characters long.");
         return;
       }
+
       if (UserService.isUserNameTaken(cleanName)) {
         socket.emit(
           "error-message",
@@ -18,11 +21,13 @@ export function setupSocketHandlers(io) {
         );
         return;
       }
+
       UserService.setUsername(socket.id, cleanName);
       socket.emit("username-set", cleanName);
       console.log(`[USERNAME] ${socket.id} → ${cleanName}`);
     });
 
+    // --- Room events ---
     socket.on("join-room", (roomId) => handleJoinRoom(socket, roomId, io));
     socket.on("code-change", (data) => handleCodeChange(socket, data, io));
     socket.on("language-change", (data) =>
@@ -31,51 +36,71 @@ export function setupSocketHandlers(io) {
     socket.on("chat-message", (message) =>
       handleChatMessage(socket, message, io),
     );
+
+    // --- Disconnects ---
     socket.on("disconnecting", () => handleDisconnecting(socket, io));
     socket.on("disconnect", () => handleDisconnect(socket, io));
   });
 }
 
+// --- JOIN ROOM HANDLER ---
 function handleJoinRoom(socket, roomId, io) {
-  socket.join(roomId);
-  const room = RoomService.getRoomOrCreate(roomId);
   const username = UserService.getUsername(socket.id);
+  if (!username) {
+    socket.emit("error-message", "Please set your username first.");
+    return;
+  }
 
+  const room = RoomService.getRoomOrCreate(roomId);
+
+  // 🔒 Check if username already exists in that room
+  if (room.hasUserName && room.hasUserName(username)) {
+    socket.emit(
+      "error-message",
+      `A user named "${username}" is already in this room.`,
+    );
+    return;
+  }
+
+  socket.join(roomId);
   room.addUser(socket.id, username);
 
-  // Broadcast to all clients in the room that a new user joined
+  // Broadcast to everyone that a new user joined
   io.to(roomId).emit("user-joined", {
     username,
     users: room.getUsers(),
     totalUsers: room.getUserCount(),
   });
 
-  // Send initial state to the joining user
+  // Send initial state to the new user
   socket.emit("initial-state", {
     ...room.getState(),
     users: room.getUsers(),
     totalUsers: room.getUserCount(),
   });
+
+  console.log(`[ROOM] ${username} joined room ${roomId}`);
 }
 
+// --- CODE CHANGE HANDLER ---
 function handleCodeChange(socket, { roomId, code }, io) {
   const room = RoomService.getRoom(roomId);
   if (room) {
     room.updateCode(code);
-    // Broadcast code changes to all clients except sender
     socket.to(roomId).emit("code-update", code);
   }
 }
 
+// --- LANGUAGE CHANGE HANDLER ---
 function handleLanguageChange(socket, { roomId, language }, io) {
   const room = RoomService.getRoom(roomId);
   if (room) {
     room.updateLanguage(language);
-    // Broadcast language changes to all clients except sender
     socket.to(roomId).emit("language-update", language);
   }
 }
 
+// --- CHAT MESSAGE HANDLER ---
 function handleChatMessage(socket, message, io) {
   const username = UserService.getUsername(socket.id);
   if (!username) {
@@ -85,20 +110,15 @@ function handleChatMessage(socket, message, io) {
     return;
   }
 
-  const enrichedMessage = {
-    ...message,
-    username,
-    timestamp: Date.now(),
-  };
+  const enrichedMessage = { ...message, username, timestamp: Date.now() };
 
   for (const roomId of socket.rooms) {
-    if (roomId === socket.id) continue; //skip sockets own room
-    const room = RoomService.getRoom(roomId);
-    if (!room) continue;
+    if (roomId === socket.id) continue;
     io.to(roomId).emit("chat-message", enrichedMessage);
   }
 }
 
+// --- DISCONNECTING HANDLER ---
 function handleDisconnecting(socket, io) {
   const username = UserService.getUsername(socket.id);
   if (!username) return;
@@ -121,9 +141,11 @@ function handleDisconnecting(socket, io) {
       RoomService.removeRoom(roomId);
     }
   }
-  UserService.removeUser(socket.id); //optional
+
+  UserService.removeUser(socket.id);
 }
 
-function handleDisconnect(socket, io) {
+// --- FINAL DISCONNECT CLEANUP ---
+function handleDisconnect(socket) {
   UserService.removeUser(socket.id);
 }

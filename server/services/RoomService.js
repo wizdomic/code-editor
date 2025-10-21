@@ -1,4 +1,4 @@
-import Room from '../models/Room.js';
+import Room from "../models/Room.js";
 
 class RoomService {
   constructor() {
@@ -33,6 +33,13 @@ class RoomService {
         this.removeRoom(roomId);
       }
     }
+  }
+
+  // ✅ NEW: Check if a username exists in this room
+  isUserInRoomByName(roomId, username) {
+    const room = this.getRoom(roomId);
+    if (!room) return false;
+    return room.hasUserName(username);
   }
 }
 
