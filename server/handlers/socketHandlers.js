@@ -51,10 +51,11 @@ function handleJoinRoom(socket, roomId, io) {
     return;
   }
 
-  const room = RoomService.getRoomOrCreate(roomId);
+  // 👇 only get room if exists
+  let room = RoomService.getRoom(roomId);
 
-  // 🔒 Check if username already exists in that room
-  if (room.hasUserName && room.hasUserName(username)) {
+  // 🚫 if same username exists in that room
+  if (room && room.isUserNameTaken(username)) {
     socket.emit(
       "error-message",
       `A user named "${username}" is already in this room.`,
@@ -62,17 +63,20 @@ function handleJoinRoom(socket, roomId, io) {
     return;
   }
 
+  // ✅ create new room only if needed
+  if (!room) {
+    room = RoomService.createRoom(roomId);
+  }
+
   socket.join(roomId);
   room.addUser(socket.id, username);
 
-  // Broadcast to everyone that a new user joined
   io.to(roomId).emit("user-joined", {
     username,
     users: room.getUsers(),
     totalUsers: room.getUserCount(),
   });
 
-  // Send initial state to the new user
   socket.emit("initial-state", {
     ...room.getState(),
     users: room.getUsers(),

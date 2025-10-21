@@ -1,7 +1,7 @@
 class Room {
   constructor() {
-    this.code = '';
-    this.language = 'javascript';
+    this.code = "";
+    this.language = "javascript";
     this.users = new Map();
   }
 
@@ -23,6 +23,16 @@ class Room {
     this.language = language;
   }
 
+  // ✅ NEW: check if username already exists in this room
+  isUserNameTaken(username) {
+    for (const name of this.users.values()) {
+      if (name.toLowerCase() === username.toLowerCase()) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   getUsers() {
     return Array.from(this.users.values());
   }
@@ -40,7 +50,7 @@ class Room {
       code: this.code,
       language: this.language,
       users: this.getUsers(),
-      totalUsers: this.getUserCount()
+      totalUsers: this.getUserCount(),
     };
   }
 }

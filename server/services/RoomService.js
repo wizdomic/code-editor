@@ -35,11 +35,11 @@ class RoomService {
     }
   }
 
-  // ✅ NEW: Check if a username exists in this room
+  // ✅ Correctly uses the new Room method
   isUserInRoomByName(roomId, username) {
     const room = this.getRoom(roomId);
     if (!room) return false;
-    return room.hasUserName(username);
+    return room.isUserNameTaken(username);
   }
 }
 
