@@ -21,7 +21,7 @@ function createApp() {
   setInterval(() => {
     RoomService.cleanupEmptyRooms();
     console.log("🧹 Cleaned up empty rooms at", new Date().toISOString());
-  }, 5 * 60 * 1000);
+  }, 1 * 60 * 1000);
 
   return httpServer;
 }
