@@ -43,7 +43,6 @@ export function setupSocketHandlers(io) {
   });
 }
 
-// --- JOIN ROOM HANDLER ---
 function handleJoinRoom(socket, roomId, io) {
   const username = UserService.getUsername(socket.id);
   if (!username) {
@@ -51,10 +50,8 @@ function handleJoinRoom(socket, roomId, io) {
     return;
   }
 
-  // 👇 only get room if exists
   let room = RoomService.getRoom(roomId);
 
-  // 🚫 if same username exists in that room
   if (room && room.isUserNameTaken(username)) {
     socket.emit(
       "error-message",
@@ -63,7 +60,6 @@ function handleJoinRoom(socket, roomId, io) {
     return;
   }
 
-  // ✅ create new room only if needed
   if (!room) {
     room = RoomService.createRoom(roomId);
   }
@@ -86,7 +82,6 @@ function handleJoinRoom(socket, roomId, io) {
   console.log(`[ROOM] ${username} joined room ${roomId}`);
 }
 
-// --- CODE CHANGE HANDLER ---
 function handleCodeChange(socket, { roomId, code }, io) {
   const room = RoomService.getRoom(roomId);
   if (room) {
@@ -95,7 +90,6 @@ function handleCodeChange(socket, { roomId, code }, io) {
   }
 }
 
-// --- LANGUAGE CHANGE HANDLER ---
 function handleLanguageChange(socket, { roomId, language }, io) {
   const room = RoomService.getRoom(roomId);
   if (room) {
@@ -104,7 +98,6 @@ function handleLanguageChange(socket, { roomId, language }, io) {
   }
 }
 
-// --- CHAT MESSAGE HANDLER ---
 function handleChatMessage(socket, message, io) {
   const username = UserService.getUsername(socket.id);
   if (!username) {

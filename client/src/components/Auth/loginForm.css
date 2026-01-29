@@ -1,4 +1,3 @@
-/* Create a starry background that slowly dims */
 body{
   box-sizing: border-box;
   overflow:hidden;
@@ -19,10 +18,9 @@ body{
   width: 100%;
   height: 100%;
   background: url('https://cdn.pixabay.com/photo/2016/12/06/02/56/astronomy-1872283_960_720.jpg') no-repeat center center/cover;
-  animation: dimStars 1s infinite alternate; /* Slow down dimming effect */
+  animation: dimStars 1s infinite alternate;
 }
 
-/* Dimming animation */
 @keyframes dimStars {
   0% {
     opacity: 1;
@@ -32,7 +30,6 @@ body{
   }
 }
 
-/* Fewer stars */
 .star {
   position: absolute;
   border-radius: 50%;
@@ -63,20 +60,18 @@ body{
 }
 
 .starry-background .star:nth-child(odd) {
-  animation-duration: 6s; /* Slow down the odd stars */
+  animation-duration: 6s; 
 }
 
 .starry-background .star:nth-child(even) {
-  animation-duration: 8s; /* Slow down the even stars */
+  animation-duration: 8s; 
 }
 
-/* Adjusting width/height of the stars to make them less dense */
 .star {
-  width: 2px; /* Smaller size */
-  height: 2px; /* Smaller size */
+  width: 2px; 
+  height: 2px; 
 }
 
-/* Optional: Create a way to control the number of stars dynamically */
 .starry-background .star-container {
   position: absolute;
   top: 0;
@@ -86,11 +81,10 @@ body{
   pointer-events: none;
 }
 
-/* Increase the form size and make it responsive */
 .form-container {
   width: 90%;
-  max-width: 500px; /* Limit max width */
-  padding: 2rem; /* Adjust padding for spacious form */
+  max-width: 500px; 
+  padding: 2rem; 
   box-sizing: border-box;
   background-color: #2d2d2d;
   border-radius: 10px;
@@ -98,13 +92,12 @@ body{
 }
 
 h2 {
-  font-size: 1.75rem; /* Adjust heading font size */
+  font-size: 1.75rem; 
   margin-bottom: 1.5rem;
 }
 
-/* Larger input fields and buttons */
 input {
-  font-size: 1.125rem; /* Larger text size */
+  font-size: 1.125rem; 
   padding: 0.75rem 1.25rem;
   margin: 0.5rem 0;
   border-radius: 8px;
@@ -121,17 +114,17 @@ input {
 @media (max-width: 768px) {
   .form-container {
     width: 90%;
-    max-width: 400px; /* Further reduce width for smaller screens */
-    padding: 1.5rem; /* Adjust padding for mobile */
+    max-width: 400px;
+    padding: 1.5rem;
   }
 
   h2 {
-    font-size: 1.5rem; /* Reduce font size on small screens */
+    font-size: 1.5rem; 
   }
 
   input {
-    font-size: 1rem; /* Adjust font size */
-    padding: 0.75rem; /* Adjust padding */
+    font-size: 1rem; 
+    padding: 0.75rem; 
   }
 }
 
@@ -142,10 +135,10 @@ input {
   }
 
   h2 {
-    font-size: 1.25rem; /* Further reduce heading size */
+    font-size: 1.25rem; 
   }
 
   input {
-    font-size: 0.875rem; /* Reduce button/input text size */
+    font-size: 0.875rem; 
   }
 }

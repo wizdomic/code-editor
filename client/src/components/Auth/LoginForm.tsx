@@ -8,12 +8,13 @@ export function LoginForm() {
   const [inputUsername, setInputUsername] = useState("");
   const [inputRoomId, setInputRoomId] = useState("");
   const [isJoining, setIsJoining] = useState(false);
+  const [isConnecting, setIsConnecting] = useState(false);
+
   const [error, setError] = useState<string | null>(null);
 
   const setUsername = useUserStore((state) => state.setUsername);
   const setRoomId = useEditorStore((state) => state.setRoomId);
 
-  // Listen for errors from backend
   useEffect(() => {
     socket.on("error-message", (msg: string) => {
       console.error("[Server Error]", msg);
@@ -21,10 +22,10 @@ export function LoginForm() {
     });
 
     socket.on("username-set", (cleanName: string) => {
+      setIsConnecting(false); 
       setError(null);
       setUsername(cleanName);
 
-      // Join or create room after username is confirmed
       if (isJoining && inputRoomId.trim()) {
         setRoomId(inputRoomId.trim());
         socket.emit("join-room", inputRoomId.trim());
@@ -35,13 +36,13 @@ export function LoginForm() {
       }
     });
 
+
     return () => {
       socket.off("error-message");
       socket.off("username-set");
     };
   }, [isJoining, inputRoomId, setUsername, setRoomId]);
 
-  // Pre-fill room from URL
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const roomFromUrl = params.get("room");
@@ -60,8 +61,10 @@ export function LoginForm() {
       return;
     }
 
+    setIsConnecting(true); 
     socket.emit("set-username", inputUsername.trim());
   };
+
 
   return (
     <div className="starry-background">
@@ -71,6 +74,12 @@ export function LoginForm() {
           <h2 className="text-2xl font-bold text-white mb-6 text-center">
             {isJoining ? "Join Code Session" : "Create New Session"}
           </h2>
+
+          {isConnecting && (
+            <div className="bg-blue-500 text-white p-2 rounded mb-4 text-center">
+              Connecting... Please wait
+            </div>
+          )}
 
           {error && (
             <div className="bg-red-600 text-white p-2 rounded mb-4 text-center">

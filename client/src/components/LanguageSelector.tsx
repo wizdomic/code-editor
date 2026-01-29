@@ -6,7 +6,7 @@ export function LanguageSelector() {
   const { language, roomId, setLanguage } = useEditorStore();
 
   const handleLanguageChange = (newLanguage: string) => {
-    setLanguage(newLanguage); // Updates code automatically
+    setLanguage(newLanguage);
     if (roomId) {
       socket.emit('language-change', { roomId, language: newLanguage });
     }

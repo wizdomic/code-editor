@@ -23,7 +23,6 @@ class Room {
     this.language = language;
   }
 
-  // ✅ NEW: check if username already exists in this room
   isUserNameTaken(username) {
     for (const name of this.users.values()) {
       if (name.toLowerCase() === username.toLowerCase()) {

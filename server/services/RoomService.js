@@ -35,7 +35,6 @@ class RoomService {
     }
   }
 
-  // ✅ Correctly uses the new Room method
   isUserInRoomByName(roomId, username) {
     const room = this.getRoom(roomId);
     if (!room) return false;
