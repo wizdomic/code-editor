@@ -13,6 +13,7 @@ import { useChatStore } from './store/chatStore';
 import { executeCode } from './services/codeExecutionService';
 import { setupSocketListeners } from './services/socketService';
 import { SUPPORTED_LANGUAGES } from './types/editor';
+import { LeaveRoomButton } from './components/Auth/LeaveRoomButton';
 
 function App() {
   const { code, language, roomId, setUsers, setCode, setLanguage } = useEditorStore();
@@ -99,6 +100,7 @@ function App() {
             <Download className="w-4 h-4" />
             <span>Download</span>
           </button>
+          <LeaveRoomButton/>
         </div>
       </header>
 
