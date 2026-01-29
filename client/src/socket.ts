@@ -5,4 +5,5 @@ const BACKEND_URL =
 
 export const socket = io(BACKEND_URL, {
   transports: ["websocket", "polling"],
+  secure: BACKEND_URL.startsWith("https"),
 });
