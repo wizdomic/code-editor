@@ -1,10 +1,10 @@
 export const config = {
-  port: process.env.PORT || 3001,
+  port: Number(process.env.PORT) || 3001,
   cors: {
     origin: [
-      "https://code-editor-omega-amber.vercel.app",
-      "http://localhost:5173",
-    ],
+      process.env.CLIENT_URL,
+      process.env.CLIENT_URL_LOCAL,
+    ].filter(Boolean),
     methods: ["GET", "POST"],
   },
 };
