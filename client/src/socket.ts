@@ -1,9 +1,12 @@
-import { io } from "socket.io-client";
+import { io } from 'socket.io-client';
 
-const BACKEND_URL =
-  import.meta.env.VITE_BACKEND_URL || "http://localhost:3001";
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
 
 export const socket = io(BACKEND_URL, {
-  transports: ["websocket", "polling"],
-  secure: BACKEND_URL.startsWith("https"),
+  autoConnect: true,
+  reconnection: true,
+  reconnectionAttempts: Infinity,
+  reconnectionDelay: 1000,
+  reconnectionDelayMax: 5000,
+  timeout: 10000,
 });

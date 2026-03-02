@@ -1,45 +1,19 @@
-import Room from "../models/Room.js";
+import Room from '../models/Room.js';
 
-class RoomService {
-  constructor() {
-    this.rooms = new Map();
-  }
+const rooms = new Map(); // roomId → Room
 
-  createRoom(roomId) {
-    const room = new Room();
-    this.rooms.set(roomId, room);
+export default {
+  create(roomId, creatorSocketId, password) {
+    const room = new Room(creatorSocketId, password);
+    rooms.set(roomId, room);
     return room;
-  }
+  },
 
-  getRoom(roomId) {
-    return this.rooms.get(roomId);
-  }
+  get(roomId) {
+    return rooms.get(roomId) ?? null;
+  },
 
-  getRoomOrCreate(roomId) {
-    let room = this.getRoom(roomId);
-    if (!room) {
-      room = this.createRoom(roomId);
-    }
-    return room;
-  }
-
-  removeRoom(roomId) {
-    this.rooms.delete(roomId);
-  }
-
-  cleanupEmptyRooms() {
-    for (const [roomId, room] of this.rooms.entries()) {
-      if (room.isEmpty()) {
-        this.removeRoom(roomId);
-      }
-    }
-  }
-
-  isUserInRoomByName(roomId, username) {
-    const room = this.getRoom(roomId);
-    if (!room) return false;
-    return room.isUserNameTaken(username);
-  }
-}
-
-export default new RoomService();
+  remove(roomId) {
+    rooms.delete(roomId);
+  },
+};

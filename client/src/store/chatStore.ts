@@ -1,26 +1,29 @@
 import { create } from 'zustand';
-import { Message } from '../types/chat';
+import type { Message } from '../types/chat';
 
 interface ChatStore {
-  messages: Message[];
-  addMessage: (message: Message) => void;
+  messages:         Message[];
+  addMessage:       (message: Message) => void;
   addSystemMessage: (text: string) => void;
-  clearMessages: () => void;
+  clearMessages:    () => void;
 }
 
 export const useChatStore = create<ChatStore>((set) => ({
   messages: [],
-  addMessage: (message) => set((state) => ({
-    messages: [...state.messages, message]
-  })),
-  addSystemMessage: (text) => set((state) => ({
-    messages: [...state.messages, {
-      id: Date.now().toString(),
-      username: 'System',
-      text,
-      timestamp: Date.now(),
-      type: 'system'
-    }]
-  })),
+
+  addMessage: (message) =>
+    set(s => ({ messages: [...s.messages, message] })),
+
+  addSystemMessage: (text) =>
+    set(s => ({
+      messages: [...s.messages, {
+        id:        `sys-${Date.now()}`,
+        username:  'system',
+        text,
+        timestamp: Date.now(),
+        type:      'system',
+      }],
+    })),
+
   clearMessages: () => set({ messages: [] }),
 }));

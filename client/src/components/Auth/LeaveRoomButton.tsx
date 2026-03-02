@@ -1,61 +1,29 @@
-import React, { useState } from "react";
-import { socket } from "../../socket";
-import { useUserStore } from "../../store/userStore";
-import { useEditorStore } from "../../store/editorStore";
-import { useChatStore } from "../../store/chatStore";
+import { LogOut } from 'lucide-react';
+import { useUserStore }   from '../../store/userStore';
+import { useEditorStore } from '../../store/editorStore';
+import { useChatStore }   from '../../store/chatStore';
+import { clearSession }   from '../../sessions';
+import { socket }         from '../../socket';
 
 export function LeaveRoomButton() {
-  const [showConfirm, setShowConfirm] = useState(false);
+  const logout        = useUserStore(s => s.logout);
+  const setRoomId     = useEditorStore(s => s.setRoomId);
+  const clearMessages = useChatStore(s => s.clearMessages);
 
-  const logout = useUserStore((state) => state.logout);
-  const setRoomId = useEditorStore((state) => state.setRoomId);
-  const setUsers = useEditorStore((state) => state.setUsers);
-  const clearMessages = useChatStore((state) => state.clearMessages);
-
-  const handleLeaveRoom = () => {
-    // Disconnect socket to trigger backend cleanup
+  const leave = () => {
+    clearSession();
     socket.disconnect();
-
-    // Reset frontend state
-    logout();
-    setRoomId("");
-    setUsers([]);
-    clearMessages();
-
-    // Optional: reconnect socket if user wants to join another room
     socket.connect();
-
-    setShowConfirm(false);
+    logout();
+    setRoomId(null);
+    clearMessages();
   };
 
   return (
-    <div className="relative">
-      <button
-        onClick={() => setShowConfirm(true)}
-        className="px-3 py-1 bg-red-600 hover:bg-red-700 rounded-md text-white"
-      >
-        Leave Room
-      </button>
-
-      {showConfirm && (
-        <div className="absolute top-full mt-2 right-0 bg-gray-800 border border-gray-700 p-4 rounded shadow-lg z-50 w-64">
-          <p className="text-white mb-3">Are you sure you want to leave the room?</p>
-          <div className="flex justify-end space-x-2">
-            <button
-              onClick={() => setShowConfirm(false)}
-              className="px-3 py-1 bg-gray-600 hover:bg-gray-700 rounded text-white"
-            >
-              Cancel
-            </button>
-            <button
-              onClick={handleLeaveRoom}
-              className="px-3 py-1 bg-red-600 hover:bg-red-700 rounded text-white"
-            >
-              Leave
-            </button>
-          </div>
-        </div>
-      )}
-    </div>
+    <button onClick={leave} title="Leave room"
+      className="flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs font-medium
+                 bg-gray-700 hover:bg-red-700 text-gray-300 hover:text-white transition-colors">
+      <LogOut className="w-3.5 h-3.5" /> Leave
+    </button>
   );
 }

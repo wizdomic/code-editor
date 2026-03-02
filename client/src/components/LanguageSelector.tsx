@@ -1,27 +1,17 @@
-import { useEditorStore } from '../store/editorStore';
-import { socket } from '../socket';
+import { useEditorStore }    from '../store/editorStore';
 import { SUPPORTED_LANGUAGES } from '../types/editor';
 
-export function LanguageSelector() {
-  const { language, roomId, setLanguage } = useEditorStore();
+interface Props { onChange?: (lang: string) => void; disabled?: boolean; }
 
-  const handleLanguageChange = (newLanguage: string) => {
-    setLanguage(newLanguage);
-    if (roomId) {
-      socket.emit('language-change', { roomId, language: newLanguage });
-    }
-  };
-
+export function LanguageSelector({ onChange, disabled }: Props) {
+  const language = useEditorStore(s => s.language);
   return (
-    <select
-      value={language}
-      onChange={(e) => handleLanguageChange(e.target.value)}
-      className="bg-gray-900 text-white px-3 py-1 rounded-md"
-    >
-      {SUPPORTED_LANGUAGES.map((lang) => (
-        <option key={lang.id} value={lang.id}>
-          {lang.name}
-        </option>
+    <select value={language} onChange={e => onChange?.(e.target.value)} disabled={disabled}
+      className="bg-gray-700 border border-gray-600 text-white text-sm px-2 py-1.5 rounded
+                 focus:outline-none focus:border-blue-500 disabled:opacity-40 disabled:cursor-not-allowed
+                 transition-colors">
+      {SUPPORTED_LANGUAGES.map(l => (
+        <option key={l.id} value={l.id}>{l.name}</option>
       ))}
     </select>
   );

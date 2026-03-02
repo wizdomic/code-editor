@@ -1,20 +1,15 @@
-import { create } from "zustand";
+import { create } from 'zustand';
 
 interface UserStore {
-  username: string | null;
+  username:        string | null;
   isAuthenticated: boolean;
-  error: string | null;
-  setUsername: (username: string) => void;
-  logout: () => void;
-  setError: (msg: string | null) => void;
+  setUsername:     (username: string) => void;
+  logout:          () => void;
 }
 
 export const useUserStore = create<UserStore>((set) => ({
-  username: null,
+  username:        null,
   isAuthenticated: false,
-  error: null,
-  setUsername: (username) =>
-    set({ username, isAuthenticated: true, error: null }),
-  logout: () => set({ username: null, isAuthenticated: false }),
-  setError: (msg) => set({ error: msg }),
+  setUsername:     (username) => set({ username, isAuthenticated: true }),
+  logout:          ()         => set({ username: null, isAuthenticated: false }),
 }));
