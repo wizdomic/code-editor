@@ -2,7 +2,7 @@
 
 A real-time collaborative code editor. Multiple users share a room, see each other's cursors, chat, and run code together.
 
-**Live demo →** [code-editor-omega-amber.vercel.app](https://code-editor-omega-amber.vercel.app)
+**Live demo →** [colabnow.vercel.app](https://colabnow.vercel.app)
 
 ---
 
@@ -49,43 +49,8 @@ A real-time collaborative code editor. Multiple users share a room, see each oth
 
 ---
 
-## Local Setup
-
-**Prerequisites:** Node.js 18+, a free [JDoodle account](https://www.jdoodle.com/compiler-api) for the API keys.
-
-### 1. Clone
-
-```bash
-git clone https://github.com/your-username/code-editor.git
-cd code-editor
-```
-
-### 2. Server
-
-```bash
-cd server
-cp .env.example .env      # fill in your JDoodle keys
-npm install
-npm run dev               # http://localhost:3001
-```
-
-**`server/.env`**
-
-```env
-PORT=3001
-CLIENT_URL=http://localhost:5173
-JDOODLE_CLIENT_ID=your_id
-JDOODLE_CLIENT_SECRET=your_secret
-```
-
-### 3. Client
-
-```bash
-cd client
-cp .env.example .env      # VITE_BACKEND_URL=http://localhost:3001
-npm install
-npm run dev               # http://localhost:5173
-```
+## Code Execution API from:
+a free [JDoodle account](https://www.jdoodle.com/compiler-api).
 
 ---
 
